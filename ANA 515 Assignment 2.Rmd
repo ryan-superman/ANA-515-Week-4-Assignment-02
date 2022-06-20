@@ -1,0 +1,59 @@
+---
+title: "ANA 515 Assignment 2"
+author: "Ryan Suparman"
+date: "June 19th 2022"
+output: word_document
+---
+
+```{r setup, include = FALSE}
+library(tidyverse)
+library(knitr)
+library(bslib)
+library(ggplot2)
+```
+
+Section 1: Description of the Data The data is measured the percentage of the people that used a drug in the age group and it also measures the frequency of drug the drug usage by using the median number of times a user in an age group used drugs in the past 12 months. By using this data, I am hoping to discover the Class A and B drug use percentage and frequency in 3 different age groups (teen, adult and senior). Class A substances: Heroin. We are using "drug_use_by_age" data that is in delimited format.
+
+```{r data, include = FALSE}
+#Section 2: Reading the data into R.
+#We are using "read_csv" which came from "readr" package.
+#The "read_csv" function is used to reads coomma delimited files".
+url <- 'https://raw.githubusercontent.com/fivethirtyeight/data/master/drug-use-by-age/drug-use-by-age.csv'
+drug_use <- read_csv(url(url))
+```
+
+```{r , include = FALSE}
+#Section 3: Clean the data.
+#Create a new dataset based on the age group.
+
+teen <- filter(drug_use, age <= 19)
+adult <- filter(drug_use, age > 19 & age <= 49)
+senior <- filter(drug_use, age > 49)
+```
+
+```{r char, echo=TRUE}
+#Section 4: Characteristics of the data
+teen_heroin <- round(mean(teen$`heroin-use`), digits = 2)
+adult_heroin <- round(mean(adult$`heroin-use`), digits = 2)
+senior_heroin <- round(mean(senior$`heroin-use`),digits = 2)
+
+n_teen <- format((sum(teen['n'])), scientific = F, digits = 5)
+n_adult <- format((sum(adult['n'])), scientific = F, digits = 5)
+n_senior <- sum(senior['n'])
+```
+
+We have data about Heroin usage on 3 different age groups. For teen, age between 12-19, out of `r n_teen`, about `r teen_heroin` percent in the age group use Heroin in the past 12 months. For adult, age between 20-49, out of `r n_adult`, about `r adult_heroin` percent in the age group use Heroin in the past 12 months. For senior, age 49+, out of `r n_senior`, about `r senior_heroin` percent in the age group use Heroin in the past 12 months.
+
+| Column Name      | Description                                |
+|------------------|--------------------------------------------|
+| age              | The age group                              |
+| n                | Number of people                           |
+| heroin-use       | Percent heroin usage in the past 12 months |
+| heroin-frequency | Median number of times people used heroin  |
+
+```{r summary, echo=TRUE}
+#Section 5: Summary Statistics
+sub_heroin <- drug_use$`heroin-use`
+summary_heroin <- summary(sub_heroin)
+print (summary_heroin)
+```
